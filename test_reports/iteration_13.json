@@ -1,0 +1,32 @@
+{
+  "summary": "Testing per review_request: backend endpoints for /api/regime-lab/champions/state + /mode, series/add regime_pooling, target pytest file, and UI flows in Regime-Lab modal. All items green.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": ["/app/backend/tests/test_loop_lock_and_auto_chain_2606.py"],
+  "action_items": [],
+  "critical_code_review_comments": [],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "Admin / admin via POST /api/auth/login (sets localStorage admin_token + admin_token_ts)",
+  "seed_data_creation": "Created and deleted a regime_pooling series entry (id 45a7040c7e1d) via DELETE /api/series/{id}; nothing persisted.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "pytest target: cd /app/backend && python -m pytest -n 0 -q tests/test_loop_lock_and_auto_chain_2606.py (13 passed). Champions mode endpoint: GET state is public (200), POST /mode without token -> 401, invalid mode -> 400 ('mode: off|suggest|auto'), valid auto/suggest/off persist (verified via state). Series cancel/remove endpoints returned 404 but DELETE /api/series/{id} works (200). Regime-Lab modal is opened via header button[title*='Analyse-Tools'] -> text 'Regime-Lab'. data-testid confirmed: regime-champions-mode, regime-lab-flow-toggle, regime-lab-flow-step-0..7, regime-pooling-when, autopilot-auto-chain. Toast 'Modus gespeichert' visible after save; value persists after reload. No console errors on Regime-Lab render.",
+  "detailed_results": {
+    "pytest_target_file": "13 passed, 1 warning in 1.53s",
+    "api_champions_state_no_auth": "200 {mode:suggest, assign:{}, updated_at:...}",
+    "api_champions_mode_no_token": "401",
+    "api_champions_mode_invalid": "400 'mode: off|suggest|auto'",
+    "api_champions_mode_auto": "200, state subsequently returns mode:auto",
+    "api_series_add_regime_pooling": "200 success, item queued with correct kind/body/label",
+    "ui_regime_lab_opened": true,
+    "ui_mode_select_persists_after_reload": true,
+    "ui_toast_visible": "Modus gespeichert",
+    "ui_flow_steps_rendered": "8/8",
+    "ui_regime_pooling_when_present": true,
+    "ui_autopilot_auto_chain_present": true,
+    "ui_console_errors_on_render": "none"
+  },
+  "rca of the issue": "N/A - all tests green"
+}

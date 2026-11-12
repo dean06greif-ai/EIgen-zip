@@ -1,0 +1,101 @@
+import React, { useEffect, useState } from 'react';
+import { LinkSimple, ArrowRight } from '@phosphor-icons/react';
+
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+const fmt = (v, d = 1) => (v === null || v === undefined ? '–' : Number(v).toFixed(d));
+const STATUS = { ok: 'ok', weak_evidence: 'zu wenig Holdout', no_model: 'kein Modell', no_data: 'keine Daten', pending: '–' };
+
+/** Feste Timeframe-Kette des Autopiloten (Backend: services/regime_tf_chain.py) – Standard AUS. */
+export function TfChainToggle({ timeframe, symbols, checked, onChange }) {
+  const [info, setInfo] = useState(null);
+  const symKey = (symbols || []).join(',');
+  useEffect(() => {
+    fetch(`${API_URL}/api/regime-lab/autopilot/tf-chain?timeframe=${encodeURIComponent(timeframe || '1h')}&symbols=${encodeURIComponent(symKey)}`)
+      .then(r => r.json()).then(setInfo).catch(() => setInfo(null));
+  }, [timeframe, symKey]);
+  const chain = info?.chain || [timeframe];
+  return (
+    <label className="opt-check" data-testid="autopilot-tf-chain-label"
+      title={`Timeframe-Kette: bewertet die Erkennung zusätzlich auf benachbarten Timeframes (${chain.join(' → ')}), sucht auf dem besten weiter`
+        + ` und wechselt nach ${info?.switch_after_stale ?? 60} Runden ohne Verbesserung auf den nächsten. Ein anderer Timeframe gewinnt nur mit`
+        + ` deutlichem Vorsprung (≥ ${info?.cross_tf_margin ?? 1} Punkt). Timeframes mit zu wenig Holdout-Kerzen werden übersprungen. Die Kette bleibt unter dem Makro-Timeframe der Anlageklasse (Abschnitt 0). Standard: aus.`}>
+      <input type="checkbox" checked={checked} onChange={e => onChange(e.target.checked)} data-testid="autopilot-tf-chain" />
+      {' '}Timeframe-Kette
+      {checked && <span className="opt-small" style={{ marginLeft: 4, opacity: 0.8 }} data-testid="autopilot-tf-chain-preview">({chain.join(' · ')})</span>}
+    </label>
+  );
+}
+
+/** Ergebnis der Kette: Score je Timeframe, bester markiert, optional direkt auf dem besten TF analysieren. */
+export function TfChainResult({ result, selectedTf, onAnalyzeBest }) {
+  const tc = result?.tf_chain;
+  if (!tc) return null;
+  const best = tc.best_timeframe;
+  return (
+    <div className="opt-small" style={{ marginTop: 4, padding: '4px 8px', border: '1px solid rgba(120,190,255,0.35)', borderRadius: 6 }}
+      data-testid="autopilot-tf-chain-result">
+      <LinkSimple size={11} weight="bold" /> <b>Timeframe-Kette:</b>{' '}
+      {tc.chain.map(tf => {
+        const row = tc.per_tf?.[tf] || {};
+        return (
+          <span key={tf} data-testid={`autopilot-tf-chain-row-${tf}`}
+            style={{ marginRight: 8, fontWeight: tf === best ? 700 : 400, color: tf === best ? '#5fe39a' : undefined, opacity: row.status === 'ok' || tf === best ? 1 : 0.6 }}
+            title={row.note || STATUS[row.status] || ''}>
+            {tf}{tf === tc.selected_timeframe ? ' (gewählt)' : ''}: {row.best_score != null ? fmt(row.best_score) : STATUS[row.status] || '–'}
+            {row.tested ? ` · ${row.tested} Var.` : ''}
+          </span>
+        );
+      })}
+      · {tc.switches} Wechsel ·{' '}
+      {tc.changed_timeframe
+        ? <>bester Timeframe: <b data-testid="autopilot-tf-chain-best">{best}</b> statt {tc.selected_timeframe}</>
+        : <>gewählter Timeframe <b data-testid="autopilot-tf-chain-best">{best}</b> bleibt der beste</>}
+      {tc.changed_timeframe && best !== selectedTf && onAnalyzeBest && (
+        <button className="opt-chip" style={{ marginLeft: 6 }} onClick={onAnalyzeBest} data-testid="autopilot-tf-chain-analyze"
+          title={`Erkennung übernehmen, oben auf ${best} umstellen und sofort „Regime suchen & speichern“ starten`}>
+          <ArrowRight size={11} /> Auf {best} übernehmen &amp; Regime suchen
+        </button>
+      )}
+    </div>
+  );
+}
+
+const VERDICT_COLOR = { use_macro: '#5fe39a', primary_only: '#f5c451' };
+
+/** Makro-Check nach dem Lauf: beste Haupt-Erkennung gegen die Makro-Ebene aus Abschnitt 0. */
+export function MacroCheckResult({ result }) {
+  const mc = result?.macro_check;
+  if (!mc) return null;
+  return (
+    <div className="opt-small" style={{ marginTop: 4, padding: '4px 8px', border: '1px solid rgba(120,190,255,0.25)', borderRadius: 6 }}
+      data-testid="autopilot-macro-check"
+      title="Gleiche Nutzen-Note wie im Regime-Assistenten (Abschnitt 0), gerechnet mit der gefundenen Erkennung als Haupt-Ebene. Reine Auswertung – ändert Suche und Score nicht.">
+      <b>Makro-Check ({mc.macro_tf} × {mc.timeframe}):</b>{' '}
+      Haupt allein {fmt(mc.primary)} · Makro × Haupt {fmt(mc.combined)} · Konflikt {fmt(mc.conflict_pct)} %{' '}
+      · <span style={{ color: VERDICT_COLOR[mc.verdict] }} data-testid="autopilot-macro-check-verdict">{mc.text}</span>
+    </div>
+  );
+}
+
+/** Makro-Stufe des Autopiloten (Backend: services/regime_macro_stage.py) – immer an, übernimmt nur bei Mehrwert. */
+export function MacroStageResult({ result }) {
+  const ms = result?.macro_stage;
+  if (!ms) return null;
+  const color = ms.adopted ? '#4ade80' : ms.verdict === 'no_gain' ? '#9ca3af' : '#fbbf24';
+  return (
+    <div className="opt-small" style={{ marginTop: 4, padding: '4px 8px', border: '1px solid rgba(120,190,255,0.25)', borderRadius: 6 }}
+      data-testid="autopilot-macro-stage"
+      title="Feste Kandidaten (Tages-/Wochen-Skala × weich/streng). Auswahl nur auf dem Training (Edge-t je Phase nach Kosten), einmalige Bestätigung im Holdout. Ohne Mehrwert bleibt die Haupt-Erkennung.">
+      <b>Makro-Stufe ({ms.timeframe}):</b>{' '}
+      <span style={{ color }} data-testid="autopilot-macro-stage-verdict">{ms.text}</span>
+      <div style={{ marginTop: 2 }} data-testid="autopilot-macro-stage-table">
+        {[ms.base, ...(ms.candidates || [])].filter(Boolean).map((r, i) => (
+          <div key={`${r.mode}-${r.scale}-${i}`}>
+            {i === 0 ? 'Nur Haupt' : r.label}: Score {fmt(r.score)} · Edge-t Training {fmt(r.train_t, 2)} ({fmt(r.train_phases, 0)} Ph.)
+            {(i === 0 || r.label === ms.choice) && <>{' '}· Holdout {fmt(r.holdout_t, 2)} ({fmt(r.holdout_phases, 0)} Ph.)</>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
