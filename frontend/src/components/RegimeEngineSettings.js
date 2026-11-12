@@ -199,6 +199,7 @@ export default function RegimeEngineSettings({ engine, setEngine, config, setCon
         </label>
       );
     }
+<<<<<<< HEAD
     if (m.key === 'macro_filter' || m.key === 'macro_scale') {
       const opts = m.key === 'macro_filter'
         ? [['off', 'aus'], ['soft', 'weich (gegen Makro → seitwärts)'], ['strict', 'streng (nur mit Makro)']]
@@ -213,6 +214,8 @@ export default function RegimeEngineSettings({ engine, setEngine, config, setCon
         </label>
       );
     }
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
     if (m.key === 'detector') {
       return (
         <label className="opt-field" key={m.key} title={m.help}>

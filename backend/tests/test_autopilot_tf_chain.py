@@ -56,8 +56,12 @@ def _run(body):
     return job, job["result"]
 
 
+<<<<<<< HEAD
 # Makro-Stufe (eigene Tests: test_macro_stage_0626) hier aus – getestet wird die Suche selbst
 BASE_BODY = {"symbols": ["BTCUSDT"], "timeframe": "1h", "days": 120, "seed": 7, "macro_stage": False,
+=======
+BASE_BODY = {"symbols": ["BTCUSDT"], "timeframe": "1h", "days": 120, "seed": 7,
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
              "engine_config": {"version": "v2", "detector": "ema"}}
 
 

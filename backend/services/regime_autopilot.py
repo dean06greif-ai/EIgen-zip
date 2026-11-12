@@ -30,8 +30,11 @@ from services import regime_advice
 from services import research_validation
 from services import regime_tf_chain as tf_chain
 from services import regime_macro_check as macro_check
+<<<<<<< HEAD
 from services import regime_macro_filter as macro_filter
 from services import regime_macro_stage as macro_stage
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 from services.regime_quality import SWEET_SPOT_DAYS
 from services.backtester import JobCancelled
 
@@ -237,8 +240,12 @@ def warm_seeds(raw, start_cfg: Dict, search_detectors: bool) -> List[Dict]:
             continue
         if str(cfg.get("detector") or "reactive").lower() not in DETECTORS:
             continue  # z.B. regression: keine Live-Sicht
+<<<<<<< HEAD
         # Suche nur auf der Haupt-Ebene; der Makro-Filter wird je Lauf neu geprüft
         cfg = macro_filter.strip(cfg)
+=======
+        cfg = dict(cfg)
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
         if start_cfg.get("regime_mode") is not None:
             cfg["regime_mode"] = start_cfg["regime_mode"]
         cfg["detector"] = detector_of(cfg)
@@ -888,6 +895,7 @@ def _split_train(histories: Dict, train_pct: float) -> Dict:
             "inner_anchor": inner_anchor}
 
 
+<<<<<<< HEAD
 async def _run_macro_stage(job: Dict, ctx: Dict, best: Dict, tf: str, ev,
                            target_min_days: float, target_max_days: float) -> Optional[Dict]:
     """Makro-Stufe (services/regime_macro_stage) – fail-open, ändert nur bei Mehrwert."""
@@ -906,6 +914,8 @@ async def _run_macro_stage(job: Dict, ctx: Dict, best: Dict, tf: str, ev,
         return None
 
 
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 async def run_autopilot(job_id: str, body: Dict, db):
     job = lab.JOBS[job_id]
     try:
@@ -914,7 +924,11 @@ async def run_autopilot(job_id: str, body: Dict, db):
         days = int(min(max(int(body.get("days") or 360), 30), 5500))
         train_pct = float(min(max(float(body.get("train_pct") or 75), 50), 95))
         body = pin_body_regime_mode(body)
+<<<<<<< HEAD
         start_cfg = macro_filter.strip(body.get("engine_config"))
+=======
+        start_cfg = dict(body.get("engine_config") or {})
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
         job["regime_mode"] = body["regime_mode"]
         max_minutes = min(max(float(body.get("max_minutes") or 0), 0.0), 1440.0)
         target_pct = min(max(float(body.get("target_pct") or 0), 0.0), 100.0)
@@ -1199,6 +1213,7 @@ async def run_autopilot(job_id: str, body: Dict, db):
             else:
                 no_gain()
 
+<<<<<<< HEAD
         macro_res = None
         if body.get("macro_stage") is not False:  # Standard an (kein Häkchen nötig)
             macro_res = await _run_macro_stage(job, ctxs[best_tf], best, best_tf, ev,
@@ -1210,6 +1225,8 @@ async def run_autopilot(job_id: str, body: Dict, db):
             elif macro_res:
                 # ausdrücklich „aus“: überschreibt einen alten Makro-Filter beim Übernehmen
                 best = {**best, "engine_config": {**best["engine_config"], "macro_filter": "off"}}
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
         best_ctx = ctxs[best_tf]["histories"]
         attempt_no = None
         if db is not None:
@@ -1268,8 +1285,11 @@ async def run_autopilot(job_id: str, body: Dict, db):
             result["tf_chain"] = tf_chain.summary(chain, best_tf)
             result["selected_timeframe"] = timeframe
             result["baseline"]["timeframe"] = base_tf
+<<<<<<< HEAD
         if macro_res:
             result["macro_stage"] = macro_res["report"]
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
         if job.get("start_fallback"):
             result["start_fallback"] = job["start_fallback"]
         if skipped:

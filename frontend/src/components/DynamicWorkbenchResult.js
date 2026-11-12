@@ -4,7 +4,10 @@ import { DynBadge } from './DynamicTradeTag';
 import DynamicRegimeBreakdown from './DynamicRegimeBreakdown';
 import DynamicWorkbenchRegimeTable from './DynamicWorkbenchRegimeTable';
 import DynamicScorecard from './DynamicScorecard';
+<<<<<<< HEAD
 import RegimeSplitMacroCompare from './RegimeSplitMacroCompare';
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 
 const fmt = (v, d = 2) => (v === null || v === undefined ? '–' : Number(v).toFixed(d));
 
@@ -160,7 +163,10 @@ export default function DynamicWorkbenchResult({ result, regimes, kindLabel, run
           ))}
         </div>
       )}
+<<<<<<< HEAD
       <RegimeSplitMacroCompare base={result.walkforward?.regime_split} alt={result.walkforward?.regime_split_macro} testPrefix="dwb-split-macro" />
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
       <DynamicRegimeBreakdown breakdown={result.backtest} testPrefix="dwb-bd"
         title={result.backtest?.days
           ? `AUFSCHLÜSSELUNG JE REGIME · Backtest über ${result.backtest.days} Tage · ${result.backtest.timeframe} · Kapital ${result.backtest.config?.max_capital} · Hebel ${result.backtest.config?.leverage}x`

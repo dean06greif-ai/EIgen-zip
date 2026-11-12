@@ -28,7 +28,10 @@ import RegimeLabFlow from './RegimeLabFlow';
 import RegimeInsights from './RegimeInsights';
 import { JobProgress, SOFT_STOP_KINDS, useLabJobControls } from './RegimeJobProgress';
 import RegimeAutopilot from './RegimeAutopilot';
+<<<<<<< HEAD
 import RegimeSplitMacroCompare from './RegimeSplitMacroCompare';
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 import RegimeCorrelation from './RegimeCorrelation';
 import RegimeQueueStrip from './RegimeQueueStrip';
 import { saveEngineSnapshot } from '../lib/regimeSnapshots';
@@ -486,7 +489,10 @@ function BuildAndTest({ analysis, scope, symbol, strategies, jobBlocked, executi
               ))}
             </div>
           )}
+<<<<<<< HEAD
           <RegimeSplitMacroCompare base={wf.regime_split} alt={wf.regime_split_macro} testPrefix="wf-split-macro" />
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
           {(wf.per_regime || []).length > 0 && (
             <div className="opt-small" style={{ margin: '6px 0' }}>
               Je Regime im Holdout: {wf.per_regime.map(p => (
@@ -1124,6 +1130,7 @@ export default function RegimeLab({ onClose }) {
           jobRunning={job?.status === 'running'} />
         <RegimeLabHelp />
         <RegimeLabFlow />
+<<<<<<< HEAD
         <details className="rl-assistant-collapse" style={{ margin: '0 0 10px' }} data-testid="regime-assistant-collapse">
           <summary style={{ cursor: 'pointer', fontSize: 12, opacity: 0.85 }} data-testid="regime-assistant-collapse-toggle">
             Abschnitt 0 · Regime-Assistent (festes Makro × Haupt-Rezept, Ampel für den KI-Trader) – aufklappen
@@ -1131,6 +1138,10 @@ export default function RegimeLab({ onClose }) {
           <RegimeAssistant execution={execution} lwOnline={lwOnline} jobBlocked={jobBlocked}
             onStarted={(id, kind) => attachPoll(id, kind)} />
         </details>
+=======
+        <RegimeAssistant execution={execution} lwOnline={lwOnline} jobBlocked={jobBlocked}
+          onStarted={(id, kind) => attachPoll(id, kind)} />
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 
         <div className="opt-exec-row" style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', margin: '0 0 10px' }}>
           <div className="bt-exec" data-testid="regime-execution-toggle">

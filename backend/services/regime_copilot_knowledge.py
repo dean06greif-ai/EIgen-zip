@@ -150,11 +150,14 @@ def search_path_lines() -> List[str]:
         "MAKRO-CHECK (nach jedem Autopilot-Lauf): beste Haupt-Erkennung gegen die Makro-Ebene – Nutzen-Note "
         "„nur Haupt“ vs. „Makro × Haupt“ und Konflikt-Anteil. use_macro = Makro-Filter zusammen nutzen; "
         "primary_only = Makro nur als Größen-Faktor.",
+<<<<<<< HEAD
         "MAKRO-STUFE (fest an, nach jeder Autopilot-Suche, services/regime_macro_stage): 4 feste Kandidaten "
         "(Tages-/Wochen-Skala × weich/streng) als Filter der Haupt-Erkennung (Konfig macro_filter/macro_scale). "
         "Auswahl nur nach Trainings-Edge-t (Phase = 1 Trade nach Kosten), Score/Note dürfen nicht fallen; "
         "Übernahme nur, wenn der Holdout-t ≥ 1 und ≥ Haupt-t + 0,5 ist. Sonst bleibt macro_filter=off – "
         "kein Zwang, ohne Mehrwert keine Makro-Ebene.",
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
         "WEG DORTHIN: Assistent (0) je Klasse (Lab-Job, Cloud oder lokal, Haupt-Balken) → bei grün/gelb Autopilot mit Timeframe-Kette + Note-Schutz → "
         "Analyse speichern → Kalibrierung + Ablation (gleiche Coins/TF) → Freigabe shadow → nach genug "
         "Shadow-Trades active. Nie mehrfach auf demselben Holdout nachschärfen.",

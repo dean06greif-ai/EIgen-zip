@@ -10,7 +10,10 @@ Frische-Regel statt TTL-Feld: 2 Kerzen-Längen des Modell-Timeframes; Nicht-Kryp
 außerhalb der Handelszeiten gilt der Stand der letzten Sitzung (`market_closed`).
 """
 import asyncio
+<<<<<<< HEAD
 import copy
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 import logging
 import time
 from datetime import datetime, timezone
@@ -47,8 +50,11 @@ def tf_seconds(timeframe: Optional[str]) -> int:
 DIRECTION_WORDS = {"down": "BÄR", "up": "BULLE", "sideways": "SEITWÄRTS"}
 
 _cache: Dict[str, Dict] = {}
+<<<<<<< HEAD
 _tasks: Dict[str, "asyncio.Future"] = {}
 SOFT_TIMEOUT_S = 20        # so lange wartet ein Aufrufer höchstens auf eine frische Berechnung
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 _release_cache: Dict[str, Optional[Dict]] = {}
 _release_ts = 0.0
 _locks: Dict[str, LoopLock] = {}
@@ -289,6 +295,7 @@ async def _compute(symbol: str, doc: Dict) -> Dict:
     # vom Lab-Regime ab (gemessen: bis 55 % andere Regime-IDs bei 30 Tagen).
     from services import regime_engine as eng
     days = eng.required_history_days(model.get("config") or {}, DETECT_DAYS)
+<<<<<<< HEAD
     from services import regime_live_history
 
     async def load(d):
@@ -301,6 +308,15 @@ async def _compute(symbol: str, doc: Dict) -> Dict:
     ctx = context_from_model(model, candles, tf, doc["id"], rel.get("stage") or "none", kept, symbol)
     ctx["history_days"] = int(days)
     ctx["hold_synced"] = synced
+=======
+    async with aiohttp.ClientSession() as session:
+        raw = await fetch_history(session, symbol, days)
+    candles = aggregate_candles(raw, tf, drop_partial=True)
+    del raw
+    kept = regime_release.kept_regime_ids(doc, scope, sym_for_model)
+    ctx = context_from_model(model, candles, tf, doc["id"], rel.get("stage") or "none", kept, symbol)
+    ctx["history_days"] = int(days)
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
     return ctx
 
 
@@ -318,6 +334,7 @@ async def resolve(symbol: str, band: Optional[str] = None) -> Dict:
         ent = _cache.get(key)
         if ent and time.time() - ent["_at"] < CACHE_TTL_S:
             return ent["ctx"]
+<<<<<<< HEAD
         task = _tasks.get(key)
         if task is None or task.done():
             task = asyncio.ensure_future(_refresh(key, symbol, doc, ent))
@@ -335,6 +352,8 @@ async def resolve(symbol: str, band: Optional[str] = None) -> Dict:
 
 async def _refresh(key: str, symbol: str, doc: Dict, ent: Optional[Dict]) -> Dict:
     try:
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
         try:
             ctx = await _compute(symbol, doc)
         except Exception as e:  # noqa: BLE001
@@ -354,8 +373,11 @@ async def _refresh(key: str, symbol: str, doc: Dict, ent: Optional[Dict]) -> Dic
             from services import regime_cockpit
             await regime_cockpit.record_structural(_db, symbol, ctx)
         return ctx
+<<<<<<< HEAD
     finally:
         _tasks.pop(key, None)
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 
 
 async def _assistant_or_unknown(symbol: str) -> Dict:

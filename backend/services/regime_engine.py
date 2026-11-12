@@ -149,9 +149,12 @@ DEFAULT_CONFIG: Dict = {
     "htf_days": 4.0,                  # EMA-Spanne der höheren Zeitebene (Tage)
     "htf_thr": 0.3,                   # Widerspruch ab x ATR -> seitwärts
     "htf_promote_thr": 0.0,           # > 0: starke Steigung stuft seitwärts zum Trend hoch
+<<<<<<< HEAD
     # --- Makro-Filter (services/regime_macro_filter, Standard aus = unverändert) ---
     "macro_filter": "off",            # off | soft | strict
     "macro_scale": "day",             # day (≈ 1D-Makro) | week (≈ 1W-Makro)
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
     # --- Trend (Multi-Timeframe-Regression) ---
     "horizons_days": [5, 10, 20, 50, 100],
     "horizon_weights": None,          # None = längere Horizonte leicht höher gewichtet
@@ -278,11 +281,14 @@ CONFIG_META = [
     ("htf_promote_thr", "HTF-Hochstufen (ATR)", "> 0: bei so starker Steigung der "
      "höheren Zeitebene wird seitwärts zum Trend hochgestuft (weniger verpasste "
      "Phasen). 0 = aus."),
+<<<<<<< HEAD
     ("macro_filter", "Makro-Filter", "Übergeordnete Zeitebene als Rauschfilter: off = aus, "
      "soft = Trend gegen die Makro-Richtung wird seitwärts, strict = Trend nur mit Makro. "
      "Der Autopilot prüft das automatisch (Makro-Stufe) und übernimmt es nur bei echtem Mehrwert."),
     ("macro_scale", "Makro-Skala", "day = Tages-Skala (≈ 1D-Makro, 7/45 Tage) · "
      "week = Wochen-Skala (≈ 1W-Makro, 14/60 Tage). Fest, wird nicht gesucht."),
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
     ("kombi_pivot_accel", "Kombi: Umkehrpunkte beschleunigen", "Nur Detektor "
      "'kombi': ein bestätigter Hoch-/Tiefpunkt (ATR-ZigZag) schaltet einen "
      "Wechsel, den die EMA-Steigung bereits anzeigt, SOFORT – er erzeugt nie "
@@ -424,8 +430,11 @@ _grp("Jump-Modell (Detektor 'jump')", ["jump"],
 _grp("Phasen-Glättung", ["reactive", "ema", "kombi", "jump"], "min_phase_days", "sub_min_days")
 _grp("Höherer-TF-Filter", ["reactive", "ema", "kombi", "jump"],
      "htf_confirm", "htf_days", "htf_thr", "htf_promote_thr")
+<<<<<<< HEAD
 _grp("Makro-Filter (übergeordnete Zeitebene)", ["reactive", "ema", "kombi", "jump"],
      "macro_filter", "macro_scale")
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 _grp("EMA-Bestätigung (Live-Sicht)", ["reactive", "regression"],
      "use_ema_confirm", "ema_fast_days", "ema_mid_days", "ema_slow_days",
      "ema_slope_thr", "ema_persist_days")
@@ -676,8 +685,11 @@ def resolve_config(config: Optional[Dict], timeframe: str, n_bars: int = 10 ** 9
     _f("htf_days", 0.5, 30.0)
     _f("htf_thr", 0.0, 5.0)
     _f("htf_promote_thr", 0.0, 10.0)
+<<<<<<< HEAD
     from services import regime_macro_filter as _mf
     cfg.update(_mf.normalize(cfg))
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
     _f("rev_atr_mult", 0.5, 15.0)
     _f("rev_min_pct", 0.0, 10.0)
     _f("rev_max_pct", 1.0, 60.0)
@@ -776,7 +788,11 @@ def detector_warmup_bars(cfg: Dict) -> int:
     elif det == "kombi":
         need.append(4 * max(int(round(float(cfg.get("kombi_ema_days") or 14.0) * bpd)), 2))
     elif det == "jump":
+<<<<<<< HEAD
         need.append(5 * max(int(round(float(cfg.get("jump_slow_days") or 14.0) * bpd)), 2))
+=======
+        need.append(3 * max(int(round(float(cfg.get("jump_slow_days") or 14.0) * bpd)), 2))
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
     else:  # reactive: Pivot-Gedächtnis (Legs, Stall, Persistenz)
         need.append(int(cfg.get("stall_bars") or 2) * 4)
         need.append(int(cfg.get("persist_bars") or 3) * 20)
@@ -788,9 +804,12 @@ def detector_warmup_bars(cfg: Dict) -> int:
                     + int(cfg.get("vol_window_bars") or 5))
     if mode == 5:
         need.append(2 * int((cfg.get("horizon_bars") or [7])[0]))
+<<<<<<< HEAD
     if det != "regression":
         from services import regime_macro_filter as _mf
         need.append(_mf.live_warmup_bars(cfg))
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
     return int(max(need))
 
 
@@ -1127,6 +1146,7 @@ def classify_series(model: Dict, candles, conf_min: float = None,
     return [None if r < 0 else int(r) for r in ids]
 
 
+<<<<<<< HEAD
 def hold_synced(model: Dict, candles, min_hold_days: float = None) -> Optional[bool]:
     """Ist das Live-Label dieses Fensters unabhängig von älterer Historie (services/regime_hold)?
     None = nicht prüfbar (Regressions-Detektor)."""
@@ -1141,6 +1161,8 @@ def hold_synced(model: Dict, candles, min_hold_days: float = None) -> Optional[b
     return regime_hold.synced(ids, int(det["warm"]), int(hold))
 
 
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 def final_labels(model: Dict, candles) -> List[Optional[int]]:
     """Pivot-korrigierte Phasen (nur reaktiver Detector): jede Phase beginnt am
     bestätigten Hoch-/Tiefpunkt. Für die Analyse-Ansicht und die Regime-

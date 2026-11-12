@@ -10,7 +10,11 @@ import NumInput from './NumInput';
 import RegimeAutopilotAdvice from './RegimeAutopilotAdvice';
 import RegimeAutopilotHistory, { GradeBadge } from './RegimeAutopilotHistory';
 import { workerField } from '../lib/workerTarget';
+<<<<<<< HEAD
 import { TfChainToggle, TfChainResult, MacroCheckResult, MacroStageResult } from './RegimeTfChain';
+=======
+import { TfChainToggle, TfChainResult, MacroCheckResult } from './RegimeTfChain';
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 import RegimeOverfitWarning from './RegimeOverfitWarning';
 import RegimeScoreBreakdown from './RegimeScoreBreakdown';
 import { AUTOPILOT_PRESETS } from '../lib/regimeSearchPresets';
@@ -80,9 +84,14 @@ export default function RegimeAutopilot({ selCoins, timeframe, days, trainPct, e
   const [minPhase, setMinPhase] = useState(saved.minPhase ?? 5);
   const [maxPhase, setMaxPhase] = useState(saved.maxPhase ?? 15);
   const [searchDet, setSearchDet] = useState(saved.searchDet ?? true);
+<<<<<<< HEAD
   // Fest an (keine Bedienfehler mehr): Warmstart, Note-Schutz und Makro-Stufe
   const warmStart = true;
   const gradeLock = true;
+=======
+  const [warmStart, setWarmStart] = useState(saved.warmStart ?? true);
+  const [gradeLock, setGradeLock] = useState(saved.gradeLock ?? true);
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
   const [autoChain, setAutoChain] = useState(saved.autoChain ?? true);
   // Timeframe-Kette: bewusst NICHT gespeichert – bei jedem Öffnen standardmäßig aus
   const [tfChain, setTfChain] = useState(false);
@@ -93,8 +102,13 @@ export default function RegimeAutopilot({ selCoins, timeframe, days, trainPct, e
   const [lastDecision, setLastDecision] = useState(null);
 
   useEffect(() => {
+<<<<<<< HEAD
     try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({ maxMin, targetPct, maxRounds, plateau, minPhase, maxPhase, searchDet, autoChain, phaseV: PHASE_V })); } catch { /* quota */ }
   }, [maxMin, targetPct, maxRounds, plateau, minPhase, maxPhase, searchDet, autoChain]);
+=======
+    try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({ maxMin, targetPct, maxRounds, plateau, minPhase, maxPhase, searchDet, warmStart, gradeLock, autoChain, phaseV: PHASE_V })); } catch { /* quota */ }
+  }, [maxMin, targetPct, maxRounds, plateau, minPhase, maxPhase, searchDet, warmStart, gradeLock, autoChain]);
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 
   const loadRuns = () => fetch(`${API_URL}/api/regime-lab/autopilot/runs?limit=60`).then(r => r.json())
     .then(d => setRuns(d.runs || [])).catch(() => {});
@@ -141,7 +155,11 @@ export default function RegimeAutopilot({ selCoins, timeframe, days, trainPct, e
   const applyBest = (res, id, source, ctx) => {
     const report = autopilotReport(res);
     if (!report) return false;
+<<<<<<< HEAD
     setEngineConfig({ ...(engineConfig || {}), macro_filter: 'off', ...report.best_config });
+=======
+    setEngineConfig({ ...(engineConfig || {}), ...report.best_config });
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
     // Kette: Kalibrierung gilt für den Timeframe des Ergebnisses (kann vom gewählten abweichen)
     const tf = res.tf_chain ? res.timeframe : timeframe;
     setCalibApplied?.(calibAppliedFromReport(report, id, source, ctx || { symbols: selCoins, timeframe: tf }));
@@ -210,7 +228,11 @@ export default function RegimeAutopilot({ selCoins, timeframe, days, trainPct, e
     const report = autopilotReport(res);
     if (!report || !onAnalyzeWith) { toast.error('Dieser Lauf enthält keine übernehmbare Erkennung'); return; }
     applyBest(res, r.id, 'Autopilot-Verlauf', { symbols: res.symbols, timeframe: res.timeframe });
+<<<<<<< HEAD
     onAnalyzeWith({ engineConfig: { ...(engineConfig || {}), macro_filter: 'off', ...report.best_config },
+=======
+    onAnalyzeWith({ engineConfig: { ...(engineConfig || {}), ...report.best_config },
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
       symbols: res.symbols, timeframe: res.timeframe, days: res.days });
   };
 
@@ -241,7 +263,11 @@ export default function RegimeAutopilot({ selCoins, timeframe, days, trainPct, e
     symbols: selCoins, timeframe, days, train_pct: trainPct, engine_config: engineConfig || {},
     max_minutes: maxMin, target_pct: targetPct, max_rounds: maxRounds, plateau_rounds: plateau,
     min_phase_days_target: minPhase, max_phase_days_target: maxPhase, search_detectors: searchDet, execution, ...workerField(execution, 'regime_lab'),
+<<<<<<< HEAD
     auto_chain: autoChain, warm_start: warmStart, tf_chain: tfChain, grade_lock: gradeLock, macro_stage: true,
+=======
+    auto_chain: autoChain, warm_start: warmStart, tf_chain: tfChain, grade_lock: gradeLock,
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
   });
 
   const validate = () => {
@@ -317,11 +343,39 @@ export default function RegimeAutopilot({ selCoins, timeframe, days, trainPct, e
               setMinPhase(p.minPhase); setMaxPhase(p.maxPhase); setPlateau(p.plateau); setSearchDet(p.searchDet);
               if (p.maxMin !== undefined) setMaxMin(p.maxMin);
               if (p.maxRounds !== undefined) setMaxRounds(p.maxRounds);
+<<<<<<< HEAD
+=======
+              if (p.warmStart !== undefined) setWarmStart(p.warmStart);
+              if (p.gradeLock !== undefined) setGradeLock(p.gradeLock);
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
               toast.success(`Such-Profil „${p.label}“ übernommen`);
             }}>{p.label}</button>
         ))}
       </div>
       <div className="opt-setup" style={{ alignItems: 'center' }}>
+<<<<<<< HEAD
+=======
+        <label className="opt-field" title="Sicherheits-Zeitlimit in Minuten. 0 = unbegrenzt (bis Ziel/Runden oder „Suche beenden“)">
+          Zeitlimit (Min · 0 = ∞)
+          <NumInput int min={0} max={1440} value={maxMin} onCommit={(v) => setMaxMin(v || 0)}
+            data-testid="autopilot-max-minutes" style={{ width: 60 }} />
+        </label>
+        <label className="opt-field" title="Stoppt, sobald der Auswahl-Score (innere Validierung minus Phasen-Strafe) diesen Wert erreicht. 0 = aus">
+          Ziel-Score % (0 = aus)
+          <NumInput int min={0} max={100} value={targetPct} onCommit={(v) => setTargetPct(v || 0)}
+            data-testid="autopilot-target-pct" style={{ width: 55 }} />
+        </label>
+        <label className="opt-field" title="Maximale Anzahl getesteter Varianten. 0 = endlos">
+          Max. Runden (0 = ∞)
+          <NumInput int min={0} max={100000} value={maxRounds} onCommit={(v) => setMaxRounds(v || 0)}
+            data-testid="autopilot-max-rounds" style={{ width: 65 }} />
+        </label>
+        <label className="opt-field" title="Stoppt automatisch, wenn so viele Varianten nacheinander keine Verbesserung bringen (bereits getestete werden übersprungen). 0 = aus. Eine Bewertung dauert nur Sekunden – stundenlanges Weitersuchen bringt meist nichts.">
+          Plateau-Stopp (Runden)
+          <NumInput int min={0} max={100000} value={plateau} onCommit={(v) => setPlateau(v ?? 300)}
+            data-testid="autopilot-plateau-rounds" style={{ width: 65 }} />
+        </label>
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
         <label className="opt-field" title="Sweet Spot unten für die Ø Live-RICHTUNGS-Phase (auf/seitwärts/ab): darunter gibt es Strafpunkte (bis 15) – zu kurz = Flackern, nicht handelbar. Die volle Regime-Phase (inkl. Stärke-/Vola-Stufe) muss nur einen Anteil davon erreichen: 3 Regime 100 %, 5 Regime 60 %, 9 Regime 50 %.">
           Min. Ø Phase (Tage)
           <NumInput min={0} max={30} step={0.5} value={minPhase} onCommit={(v) => setMinPhase(v ?? 5)}
@@ -332,10 +386,34 @@ export default function RegimeAutopilot({ selCoins, timeframe, days, trainPct, e
           <NumInput min={0} max={120} step={0.5} value={maxPhase} onCommit={(v) => setMaxPhase(v ?? 15)}
             data-testid="autopilot-max-phase" style={{ width: 55 }} />
         </label>
+<<<<<<< HEAD
         <span className="opt-small" data-testid="autopilot-fixed-safeguards"
           title="Diese Schutz-Regeln sind fest eingebaut und nicht mehr abschaltbar: Warmstart (bewährte Erkennungen zuerst, Holdout bleibt unberührt), Note-Schutz (Note vor Score) und Makro-Stufe (übergeordnete Zeitebene wird nach der Suche geprüft und nur bei bestätigtem Mehrwert übernommen).">
           Fest an: Warmstart · Note-Schutz · Makro-Stufe
         </span>
+=======
+        <label className="opt-check" title="Auch andere Grundgerüste (Umkehrpunkte / EMA-Steigung / Kombi) ausprobieren, nicht nur die Feineinstellungen des aktuellen">
+          <input type="checkbox" checked={searchDet} onChange={e => setSearchDet(e.target.checked)}
+            data-testid="autopilot-search-detectors" />
+          {' '}Grundgerüste mitsuchen
+        </label>
+        <label className="opt-check" title="Warmstart: zuerst die besten Erkennungen früherer Autopilot-Läufe und gespeicherter Analysen (z.B. gleiche Coins auf anderem Timeframe) auf den aktuellen Daten testen – spart Suchzeit, Bewertung und Holdout bleiben unverändert">
+          <input type="checkbox" checked={warmStart} onChange={e => setWarmStart(e.target.checked)}
+            data-testid="autopilot-warm-start" />
+          {' '}Warmstart (bewährte zuerst)
+        </label>
+        <label className="opt-check" title="Note-Schutz (empfohlen): Erst zählt die Erkennungsqualität (wie viele „sehr gut“-Kriterien erfüllt sind: Referenz-F1, Live=Final, Lag, verpasste Phasen, Sweet Spot 5–15 Tage, Validierung – gemessen auf der inneren Validierung, der Holdout bleibt Abschlusstest). Erst bei GLEICHER Stufe entscheidet der höhere Score. So überschreibt eine Variante mit höherem Score, aber schlechterer Note, nie mehr die bessere Erkennung.">
+          <input type="checkbox" checked={gradeLock} onChange={e => setGradeLock(e.target.checked)}
+            data-testid="autopilot-grade-lock" />
+          {' '}Note-Schutz (Note vor Score)
+        </label>
+        <label className="opt-check" title="Vollautomatik: nach einer gefundenen Verbesserung wird „Regime suchen & speichern“ mit der besten Erkennung automatisch in die Job-Warteschlange gestellt – auch nachts ohne offenen Browser">
+          <input type="checkbox" checked={autoChain} onChange={e => setAutoChain(e.target.checked)}
+            data-testid="autopilot-auto-chain" />
+          {' '}Vollautomatik (danach Analyse → Ablation → Pooling → fairer Vergleich)
+        </label>
+        <TfChainToggle timeframe={timeframe} symbols={selCoins} checked={tfChain} onChange={setTfChain} />
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
         {!running ? (
           <>
             <button className="opt-run" onClick={() => start(false)} disabled={jobBlocked} data-testid="autopilot-start"
@@ -358,6 +436,7 @@ export default function RegimeAutopilot({ selCoins, timeframe, days, trainPct, e
           <MoonStars size={13} /> + Warteschlange
         </button>
       </div>
+<<<<<<< HEAD
       <details className="opt-small" style={{ marginTop: 6 }} data-testid="autopilot-expert">
         <summary style={{ cursor: 'pointer' }} data-testid="autopilot-expert-toggle">Experte (Limits, Grundgerüste, Vollautomatik, Timeframe-Kette)</summary>
         <div className="opt-setup" style={{ alignItems: 'center', marginTop: 4 }}>
@@ -394,6 +473,8 @@ export default function RegimeAutopilot({ selCoins, timeframe, days, trainPct, e
         <TfChainToggle timeframe={timeframe} symbols={selCoins} checked={tfChain} onChange={setTfChain} />
         </div>
       </details>
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
       {reference && (
         <div className="opt-small" style={{ marginTop: 4, padding: '4px 8px', border: '1px solid rgba(120,190,255,0.4)', borderRadius: 6 }} data-testid="autopilot-reference">
           <b>Startpunkt (Referenz):</b> <GradeBadge rating={reference.rating} /> Lauf vom {new Date(reference.created_at).toLocaleString('de-DE')} ·
@@ -440,7 +521,10 @@ export default function RegimeAutopilot({ selCoins, timeframe, days, trainPct, e
         <TfChainResult result={lastResult} selectedTf={timeframe}
           onAnalyzeBest={onAnalyzeWith ? () => analyzeFromRun({ id: lastResult.job_id, result: lastResult }) : null} />
       )}
+<<<<<<< HEAD
       <MacroStageResult result={lastResult} />
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
       <MacroCheckResult result={lastResult} />
       {lastResult?.best && (
         <div className="opt-setup" style={{ alignItems: 'center', marginTop: 4 }}>

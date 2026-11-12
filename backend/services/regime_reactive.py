@@ -965,9 +965,12 @@ def classify(f: Dict, cfg: Dict, conf_min: float = None,
     det = detect(f, cfg)
     if cfg.get("htf_confirm"):
         det["live3"] = htf_filter(det["live3"], f, cfg)
+<<<<<<< HEAD
     from services import regime_macro_filter as mf
     if mf.active(cfg):
         det["live3"] = mf.apply(det["live3"], f, cfg)
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
     mode = eng.norm_mode(cfg.get("regime_mode", eng.DEFAULT_REGIME_MODE))
     det["mode"] = mode
     sub = _sub_axis(det, f, cfg, det["live3"], mode, causal=True)

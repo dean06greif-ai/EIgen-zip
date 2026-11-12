@@ -76,6 +76,7 @@ export function MacroCheckResult({ result }) {
     </div>
   );
 }
+<<<<<<< HEAD
 
 /** Makro-Stufe des Autopiloten (Backend: services/regime_macro_stage.py) – immer an, übernimmt nur bei Mehrwert. */
 export function MacroStageResult({ result }) {
@@ -99,3 +100,5 @@ export function MacroStageResult({ result }) {
     </div>
   );
 }
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c

@@ -773,7 +773,10 @@ async def run(job_id: str, p: Dict, deps: Dict):
                                          "per_regime": (wf or {}).get("per_regime"),
                                          "switches": (wf or {}).get("switches"),
                                          "regime_split": (wf or {}).get("regime_split"),
+<<<<<<< HEAD
                                          "regime_split_macro": (wf or {}).get("regime_split_macro"),
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
                                          "skipped_regimes": skipped,
                                          "kept_after_skip": kept_after_skip(wf, skipped)} if wf else None,
                          "rounds": job["round"], "source_dynamic_id": p.get("dynamic_id"),

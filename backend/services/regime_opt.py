@@ -9,7 +9,10 @@
   dynamische Strategie auf dem unangetasteten Holdout testen – Klassifikation
   rein rückblickend, identisch zum Live-/Paper-Verhalten (kein Lookahead).
 """
+<<<<<<< HEAD
 import asyncio
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 import logging
 import time
 from datetime import datetime, timezone
@@ -638,6 +641,7 @@ def _regime_split(single_rows, segs, assignments):
         return None
 
 
+<<<<<<< HEAD
 def _macro_split(model, histories, tf, conf_min, min_hold, bounds, single_rows, assignments):
     """Schalter-Vergleich: dieselben Holdout-Trades, Regime einmal ohne und einmal mit
     Makro-Filter bestimmt (nur neu klassifiziert, kein weiterer Backtest, fail-open)."""
@@ -666,6 +670,8 @@ def _macro_split(model, histories, tf, conf_min, min_hold, bounds, single_rows, 
         return None
 
 
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 async def run_walkforward(job_id: str, body: Dict, registry, settings: Dict,
                           default_cfg: Dict, db):
     """Holdout-Test der zusammengestellten dynamischen Strategie:
@@ -840,9 +846,12 @@ async def run_walkforward(job_id: str, body: Dict, registry, settings: Dict,
                   "per_regime": per_regime_m, "verdict": verdict,
                   "regime_evidence": regime_ev,
                   "regime_split": _regime_split(single_rows, all_test_segs, assignments),
+<<<<<<< HEAD
                   "regime_split_macro": await asyncio.to_thread(
                       _macro_split, model, histories, tf, conf_min, min_hold,
                       doc.get("bounds"), single_rows, assignments),
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
                   # AP07/R10: jede Wiederverwendung dieses sichtbaren Holdouts
                   # wird gezählt und am Ergebnis ausgewiesen.
                   "attempt_no": await research_validation.register_attempt(

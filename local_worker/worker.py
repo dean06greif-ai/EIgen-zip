@@ -48,8 +48,11 @@ Ausreißer-Filter je Regime (services/regime_outliers.py).
 Neu in 1.23.0: Pausierte Jobs belegen keinen Rechen-Slot mehr – während z.B. der
 Optimizer pausiert (Stand bleibt im RAM), kann eine andere Suche (Backtester,
 KI-Trader-Lab, Regime-Lab, Dynamik) laufen; Fortsetzen setzt exakt dort fort.
+<<<<<<< HEAD
 Neu in 1.27.0: Standby-Schutz unter Windows (keep_awake) – der Rechner geht nicht mehr in den
 Leerlauf-Standby, solange der Worker läuft (abschaltbar: WORKER_KEEP_AWAKE=0).
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 Neu in 1.25.0: Regime-Assistent (Abschnitt 0) lokal (fn="assistant") mit Pause/Abbruch/Reset
 wie alle Regime-Lab-Jobs; Kerzen-Laden: GOLDUSDT -> GOLD, „Invalid symbol“ ohne 8 Retries.
 Neu in 1.24.0: Asset-Korrelation des Regime-Labs lokal (fn="correlation") – die
@@ -70,7 +73,11 @@ import time
 import uuid
 from pathlib import Path
 
+<<<<<<< HEAD
 VERSION = "1.27.0"
+=======
+VERSION = "1.26.0"
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 SCRIPT_DIR = Path(__file__).resolve().parent
 CONFIG_PATH = SCRIPT_DIR / "worker_config.json"
 # Zweiter Speicherort im Benutzerordner: überlebt das Neu-Entpacken des Pakets
@@ -689,6 +696,7 @@ def _log_auto_update(status, error, summary):
         log(f"  {s['symbol']}: {s['error']}")
 
 
+<<<<<<< HEAD
 # ---------------- Standby verhindern ----------------
 def keep_awake():
     """Windows: Leerlauf-Standby blockieren, solange der Worker läuft (Bildschirm darf
@@ -707,6 +715,8 @@ def keep_awake():
         return False
 
 
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 # ---------------- Heartbeat / Poll-Loop ----------------
 def resources():
     out = {"cores": os.cpu_count() or 1}
@@ -815,6 +825,7 @@ def maybe_auto_update():
 def main():
     log(f"Lokaler Worker v{VERSION} · Server: {CONFIG['server_url']}")
     log(f"Daten-Ordner: {CONFIG['data_dir']}")
+<<<<<<< HEAD
     if keep_awake():
         log("Standby-Schutz aktiv: Windows geht nicht in den Leerlauf-Standby, solange dieses "
             "Fenster offen ist (Deckel zuklappen bitte in den Energieoptionen auf "
@@ -822,6 +833,8 @@ def main():
     elif os.name == "nt":
         log("HINWEIS: Standby-Schutz konnte nicht aktiviert werden – Energiesparmodus kann "
             "die Verbindung trennen")
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
     was_offline = False
     backoff = 5
     while True:

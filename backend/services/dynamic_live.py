@@ -102,7 +102,10 @@ async def refresh_state(doc: Dict, days: int, with_performance: bool = True) -> 
     from services.backtester import fetch_history, simulate_pair
     from services.bitunix_trade import DEFAULT_COIN_CFG
     from services.timeframes import aggregate_candles
+<<<<<<< HEAD
     from services import regime_live_history
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 
     model = doc["model"]
     days = history_days(model, days)
@@ -119,18 +122,27 @@ async def refresh_state(doc: Dict, days: int, with_performance: bool = True) -> 
     async with aiohttp.ClientSession() as session:
         for sym in doc.get("symbols") or []:
             try:
+<<<<<<< HEAD
                 async def load(d, _sym=sym):
                     return aggregate_candles(await fetch_history(session, _sym, d), tf,
                                              drop_partial=True)
                 # Historie verlängern, bis das Label eingerastet ist (services/regime_hold)
                 candles, used_days, synced = await regime_live_history.load_synced(
                     model, sym, days, load, min_hold)
+=======
+                raw = await fetch_history(session, sym, days)
+                candles = aggregate_candles(raw, tf, drop_partial=True)
+                del raw
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
                 if len(candles) < 50:
                     per_symbol[sym] = {"error": "Zu wenig Daten"}
                     continue
                 cur = rg.current_regime(model, candles, tf, conf_min, min_hold)
+<<<<<<< HEAD
                 cur["history_days"] = int(used_days)
                 cur["hold_synced"] = synced
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
                 rid = cur.get("regime")
                 # {} = Baseline-Konfiguration ist gültig – nur bei UNBEKANNTEM Regime Fallback
                 cur["active_config"] = configs[rid] if rid in configs \

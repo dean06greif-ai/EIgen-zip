@@ -258,7 +258,11 @@ def test_autopilot_skips_duplicates_and_stops_on_plateau(monkeypatch):
     monkeypatch.setattr(ap, "mutate", lambda cfg, rng, sd, st: {"detector": "ema", "ema_regime_days": rng.choice([5, 6])})
     job_id = lab.create_job("autopilot", {})
     body = {"symbols": ["BTCUSDT"], "timeframe": "1h", "days": 120, "plateau_rounds": 40,
+<<<<<<< HEAD
             "macro_stage": False, "engine_config": {"version": "v2", "detector": "ema"}}
+=======
+            "engine_config": {"version": "v2", "detector": "ema"}}
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
     asyncio.run(ap.run_autopilot(job_id, body, None))
     res = lab.JOBS[job_id]["result"]
     assert res["stop_reason"] == "plateau"

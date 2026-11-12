@@ -358,11 +358,14 @@ def segments_from_labels(labels: List[Optional[int]]) -> List[Tuple[int, int, in
     return segs
 
 
+<<<<<<< HEAD
 def hold_synced(model: Dict, candles, min_hold_days: float = DEFAULT_MIN_HOLD_DAYS) -> Optional[bool]:
     """Live-Label unabhängig vom Fenster-Start? None = nicht prüfbar (Alt-Modelle)."""
     return v2.hold_synced(model, candles, min_hold_days) if is_v2(model) else None
 
 
+=======
+>>>>>>> f7580c61317cdba506c81db7a0830f31af21658c
 def current_regime(model: Dict, candles: List[Dict], timeframe: str,
                    conf_min: float = DEFAULT_CONF_MIN,
                    min_hold_days: float = DEFAULT_MIN_HOLD_DAYS) -> Dict:
